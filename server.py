@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 
 from flask import Flask
+from flask import render_template
 import os
 from ConfigParser import ConfigParser
 
