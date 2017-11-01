@@ -1,2 +1,3 @@
-# simple-write-md
-Very personal markdown file writer server on basis of editor.md
+# Simple Write md files 
+
+A personal server for writing markdown files and manage them.
