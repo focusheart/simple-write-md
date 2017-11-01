@@ -7,6 +7,7 @@ Provide list, query, edit, save, etc
 '''
 
 import os
+import codecs
 from flask import Flask
 from flask import render_template
 from flask import jsonify
@@ -67,6 +68,16 @@ def save():
     '''
     Save submitted md content
     '''
+    if request.method == 'GET':
+        return 'save'
+
+    fn = request.form.get('f')
+    ctt = request.form.get('c')
+
+    full_fn = os.path.join(app.config['DOC_ROOT'], fn)
+
+    codecs.open(full_fn, 'w', 'utf-8').write(ctt)
+
     # Handle the save file operation
     ret = {'success': True}
     return jsonify(ret)

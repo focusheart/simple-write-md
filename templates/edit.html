@@ -4,11 +4,14 @@
 <link rel="stylesheet" href="static/css/style.css" />
 <link rel="stylesheet" href="static/css/editormd.css" />
 
-<div class="pure-g">
-    <div class="pure-u-5-5">
-        <p><button class="pure-button" onclick="save_file();">Save</button></p>
+<form class="pure-form pure-g">
+    <div class="pure-u-1-5">
+        <input class="pure-input-1" type="text" name="filename" id="filename" value="{{fn}}">
     </div>
-</div>
+    <div class="pure-u-1-5">
+        <a class="pure-button" href="#" onclick="save_file();">Save</a>
+    </div>
+</form>
 
 <div class="pure-g">
     <div class="pure-u-5-5">
@@ -18,30 +21,60 @@
     </div>
 </div>
 
+<style>
+#msg-notifier { position: absolute; bottom: 10px; right: 10px; opacity: .8; 
+    width: 150px; height: 32px; line-height:32px; text-align: center;}
+#msg-notifier p { margin: 0; padding: 0; line-height: 32px; }
+
+</style>
+<div id="msg-notifier">
+</div>
+
 <script src="static/js/jquery.min.js"></script>
 <script src="static/js/editormd.min.js"></script>
  
 <script type="text/javascript">
-	var testEditor;
+var testEditor;
 
-	$(function() {
-		testEditor = editormd("test-editormd", {
-			width   : "90%",
-			height  : 640,
-			syncScrolling : "single",
-			path    : "static/js/",
-            //theme : "dark",
-            //previewTheme : "dark",
-            //editorTheme : "pastel-on-dark",
+$(function() {
+    testEditor = editormd("test-editormd", {
+        width   : "100%",
+        height  : 640,
+        syncScrolling : true,
+        path    : "static/js/",
+        //theme : "dark",
+        //previewTheme : "dark",
+        //editorTheme : "pastel-on-dark",
 
-            tex : true,
-            flowChart : true,
-            sequenceDiagram : true,
-            emoji : true,
-            taskList : true
+        tex : true,
+        flowChart : true,
+        sequenceDiagram : true,
+        emoji : true,
+        taskList : true
 
-		});
-	});
+    });
+});
+
+function show_msg(msg) {
+    $('#msg-notifier').html(msg);
+}
+
+function save_file() {
+    var fn = $('#filename').val();
+    var ctt = testEditor.getMarkdown();
+    // UI effect here
+    show_msg('Saving ...');
+
+    // Send data to server
+    $.post(
+        '/save',
+        {f:fn, c:ctt},
+        function(data){
+            // callback
+            show_msg('Saved!');
+        },'json'
+    );
+}
 </script>
 
 {% endblock %}
