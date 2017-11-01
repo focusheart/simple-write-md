@@ -7,19 +7,14 @@ Provide list, query, edit, save, etc
 '''
 
 import os
-from ConfigParser import ConfigParser
 from flask import Flask
 from flask import render_template
 from flask import jsonify
 from flask import request
 from flask import abort
 
-config = ConfigParser()
-config.read('config.ini')
-
-DOC_ROOT = config.get('doc', 'root')
-
 app = Flask(__name__)
+app.config.from_object('config')
 
 @app.route('/')
 def index():
@@ -34,19 +29,38 @@ def list_files():
     List files in specified path
     '''
     path = request.args.get('p')
-    if path is None or path.strip() == '':
-        return abort(404)
+    if path is None:
+        path = ''
+    path = path.strip()
+
+    # security check
 
     # get file list here
-
-    return render_template('list.html')
+    files = os.listdir(os.path.join(app.config['DOC_ROOT'], path))
+    
+    return render_template('list.html', files=files)
 
 @app.route('/edit')
 def edit():
     '''
     Edit specified file
     '''
-    return render_template('edit.html')
+    act = request.args.get('a')
+    fn = request.args.get('f')
+
+    if act is None: abort(404)
+    if fn is None: abort(404)
+
+    fn = fn.strip()
+    # security check
+
+    # edit now
+    if act == 'new':
+        ctt = ''
+    else:
+        ctt = open(os.path.join(app.config['DOC_ROOT'], fn))
+
+    return render_template('edit.html', fn=fn, ctt=ctt)
 
 @app.route('/save', methods=['GET', 'POST'])
 def save():
@@ -58,4 +72,4 @@ def save():
     return jsonify(ret)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=51101)

@@ -1,4 +1,47 @@
 {% extends "layout.html" %}
 {% block title %}edit {% endblock %}
 {% block body %}
+<link rel="stylesheet" href="static/css/style.css" />
+<link rel="stylesheet" href="static/css/editormd.css" />
+
+<div class="pure-g">
+    <div class="pure-u-5-5">
+        <p><button class="pure-button" onclick="save_file();">Save</button></p>
+    </div>
+</div>
+
+<div class="pure-g">
+    <div class="pure-u-5-5">
+		<div id="test-editormd">
+	        <textarea style="display:none:">{{ctt}}</textarea>
+		</div>
+    </div>
+</div>
+
+<script src="static/js/jquery.min.js"></script>
+<script src="static/js/editormd.min.js"></script>
+ 
+<script type="text/javascript">
+	var testEditor;
+
+	$(function() {
+		testEditor = editormd("test-editormd", {
+			width   : "90%",
+			height  : 640,
+			syncScrolling : "single",
+			path    : "static/js/",
+            theme : "dark",
+            previewTheme : "dark",
+            editorTheme : "pastel-on-dark",
+
+            tex : true,
+            flowChart : true,
+            sequenceDiagram : true,
+            emoji : true,
+            taskList : true
+
+		});
+	});
+</script>
+
 {% endblock %}

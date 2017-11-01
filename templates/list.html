@@ -1,4 +1,28 @@
 {% extends "layout.html" %}
 {% block title %}at {% endblock %}
 {% block body %}
+<div class="pure-g">
+    <div class="pure-u-5-5">
+        <p><button class="pure-button" onclick="create_new_file();">Write New</button></p>
+    </div>
+</div>
+
+<table class="pure-table pure-table-horizontal" width="100%">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Filename</th>
+            <th>Datetime</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for file in files %}
+        <tr>
+            <td>0</td>
+            <td>{{ file }}</td>
+            <td>Time</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
