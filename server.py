@@ -37,7 +37,18 @@ def list_files():
     # security check
 
     # get file list here
-    files = os.listdir(os.path.join(app.config['DOC_ROOT'], path))
+    fns = os.listdir(os.path.join(app.config['DOC_ROOT'], path))
+    # get details
+    files = []
+    for fn in fns:
+        full_fn = os.path.join(app.config['DOC_ROOT'], path, fn)
+        is_file = 'file' if os.path.isfile(full_fn) else 'dir'
+        size = os.path.getsize(full_fn)
+        atime = os.path.getatime(full_fn)
+        if is_file == 'file':
+            files.append((fn, path, is_file, size, atime))
+        else:
+            files.insert(0, (fn, path, is_file, size, atime))
     
     return render_template('list.html', path=path, files=files)
 

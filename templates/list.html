@@ -11,17 +11,25 @@
 <table class="pure-table pure-table-horizontal" width="100%">
     <thead>
         <tr>
-            <th>#</th>
+            <th>Type</th>
             <th>Filename</th>
+            <th>Size</th>
             <th>Datetime</th>
         </tr>
     </thead>
     <tbody>
         {% for file in files %}
         <tr>
-            <td>0</td>
-            <td>{{ file }}</td>
-            <td>Time</td>
+            <td>{{ file[2] }}</td>
+            <td>
+                {% if file[2]=='file' %}
+                <a title="edit {{ file[0] }}" href="/edit?a=edt&p={{ file[1] }}&f={{ file[0] }}">{{ file[0] }}</a>
+                {% else %}
+                {{ file[0] }}
+                {% endif %}
+            </td>
+            <td>{{ file[3] }}</td>
+            <td class="dts">{{ file[4] }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -31,5 +39,16 @@
 function create_new_file() {
     location.href = '/edit?p={{path}}&f=untitled.md&a=new';
 }
+
+function to_local_time(ts) {     
+    return new Date(parseInt(ts) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');     
+}
+
+$(document).ready(function(){
+    $('.dts').each(function(){
+        var ts = $(this).text();
+        $(this).html(to_local_time(ts));
+    });
+});
 </script>
 {% endblock %}
