@@ -3,7 +3,8 @@
 {% block body %}
 <div class="pure-g">
     <div class="pure-u-5-5">
-        <p><button class="pure-button" onclick="create_new_file();">Write New</button></p>
+        {{path}}
+        <button class="pure-button" onclick="create_new_file();">Write New</button>
     </div>
 </div>
 
@@ -28,7 +29,7 @@
 
 <script>
 function create_new_file() {
-    location.href = '/edit?f=untitled.md&a=new';
+    location.href = '/edit?p={{path}}&f=untitled.md&a=new';
 }
 </script>
 {% endblock %}

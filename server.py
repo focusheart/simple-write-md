@@ -39,7 +39,7 @@ def list_files():
     # get file list here
     files = os.listdir(os.path.join(app.config['DOC_ROOT'], path))
     
-    return render_template('list.html', files=files)
+    return render_template('list.html', path=path, files=files)
 
 @app.route('/edit')
 def edit():
@@ -47,21 +47,24 @@ def edit():
     Edit specified file
     '''
     act = request.args.get('a')
+    path = request.args.get('p')
     fn = request.args.get('f')
 
     if act is None: abort(404)
+    if path is None: abort(404)
     if fn is None: abort(404)
 
-    fn = fn.strip()
     # security check
+    path = path.strip()
+    fn = fn.strip()
 
     # edit now
     if act == 'new':
         ctt = ''
     else:
-        ctt = open(os.path.join(app.config['DOC_ROOT'], fn))
+        ctt = codecs.open(os.path.join(app.config['DOC_ROOT'], path, fn), 'r', 'utf-8').read()
 
-    return render_template('edit.html', fn=fn, ctt=ctt)
+    return render_template('edit.html', fn=fn, path=path, ctt=ctt)
 
 @app.route('/save', methods=['GET', 'POST'])
 def save():
@@ -71,10 +74,11 @@ def save():
     if request.method == 'GET':
         return 'save'
 
+    path = request.form.get('p')
     fn = request.form.get('f')
     ctt = request.form.get('c')
 
-    full_fn = os.path.join(app.config['DOC_ROOT'], fn)
+    full_fn = os.path.join(app.config['DOC_ROOT'], path, fn)
 
     codecs.open(full_fn, 'w', 'utf-8').write(ctt)
 
